@@ -1,5 +1,5 @@
-@define pattern-root(sel: :root){`
-@use(sel){
+@define pattern-root(sel:root){`
+:@use(sel){
 /* ========== Design Tokens ========== */
 --pattern-accent: #764ba2;
 --pattern-accent-light: #667eea;
