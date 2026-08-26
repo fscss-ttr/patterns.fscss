@@ -25,7 +25,7 @@ their CSS inside two reusable `@define` blocks:
 
 ### Import the published module
 
-```fscss
+```css
 @import((pattern-root, patterns) from patterns)
 
 @pattern-root()
