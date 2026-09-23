@@ -3,7 +3,7 @@ Compile with: fscss demo.fscss demo.css
 Or preview instantly with the browser runtime (see demo.html).
 */
 
-@import((pattern-root, patterns) from ".../patterns.fscss")
+@import((pattern-root, patterns) from "./patterns.fscss")
 
 @pattern-root()
 @patterns(0.5)
