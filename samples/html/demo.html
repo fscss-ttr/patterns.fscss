@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PatternKit — built with patterns.fscss</title>
+<link type="fscss" href="./demo.fscss">
+<script src="https://cdn.jsdelivr.net/npm/fscss@1.2.4/runtime.min.js" defer></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container site-header-inner">
+    <a class="logo" href="#">PatternKit</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+
+    </ul>
+    <a class="btn-primary" href="#try-it">Get started</a>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- hero -->
+  <section class="hero">
+    <span class="hero-badge">New: FSCSS 1.2.4</span>
+    <h1>Ship real UI with plain-English CSS</h1>
+    <p>Every element below is built by pattern() calls in demo.fscss, no
+       hand-rolled component CSS, no build step, just FSCSS compiling
+       phrases into real declarations.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#try-it" style="background:#fff;color:#344466;">Start building</a>
+      <a class="btn-ghost" href="https://fscss.devtem.org/pattern">View docs</a>
+    </div>
+  </section>
+
+  <!-- features -->
+  <section id="features" style="margin-top:48px;">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">~</div>
+        <h3>Plain-English patterns</h3>
+        <p>Describe what you want in the stylesheet, pattern() matches it against a threshold and injects real CSS.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">~</div>
+        <h3>Tunable via @match</h3>
+        <p>Colors, radii, durations, all pass through the phrase itself, with a token fallback when you don't.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">~</div>
+        <h3>No build step required</h3>
+        <p>Compile once with the CLI, or let the browser runtime process it live off a plain &lt;link type="fscss"&gt;.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- form -->
+  <section id="try-it">
+    <h2>Try it</h2>
+    <form onsubmit="return false;" style="max-width:360px;">
+      <div class="form-row">
+        <label for="project-name">Project name</label>
+        <input class="form-input" id="project-name" type="text" placeholder="my-cool-project">
+      </div>
+      <div class="form-row">
+        <label for="team-slug">Team slug (locked on the free plan)</label>
+        <input class="form-input" id="team-slug" type="text" value="devtemple-free" disabled>
+      </div>
+      <button class="btn-primary" type="submit" onclick="deploy()">Deploy</button>
+    </form>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- status alerts, driven by the deploy button above -->
+  <section id="status">
+    <h2>Status</h2>
+    <div class="alert-success" id="alert-success" style="display:none;">
+      Deployed successfully. Your project is live.
+    </div>
+    <div class="alert-error" id="alert-error" style="display:none;">
+      build failed: missing environment variable <code>DATABASE_URL</code>.
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%;"></div>
+      </div>
+      <p style="font-size:0.8rem;color:#8b84a0;" id="progress-label">Idle</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- profile row -->
+  <section>
+    <h2>Team</h2>
+    <div class="profile-row">
+      <div style="position:relative;">
+        <div class="tooltip">Online now</div>
+      </div>
+      <img class="avatar" src="https://i.pravatar.cc/112" alt="Team member avatar">
+      <div>
+        <strong>Amaka O.</strong>
+        <span class="pro-badge">Pro</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- tabs -->
+  <section>
+    <h2>Documentation</h2>
+    <div class="tabs">
+      <button class="tab is-active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="reviews">Reviews</button>
+      <button class="tab" data-tab="changelog">Changelog</button>
+    </div>
+    <div class="tab-panel is-active" data-panel="overview">
+      Patterns compile to plain CSS custom properties with fallbacks, so the
+      output works even without JS on the page.
+    </div>
+    <div class="tab-panel" data-panel="reviews">
+      "Cut our component CSS in half." — a dev.to comment, paraphrased.
+    </div>
+    <div class="tab-panel" data-panel="changelog">
+      v1.2.4: balanced @match parsing, safer regex handling.
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- skeleton -> real content -->
+  <section>
+    <h2>Recent deploys</h2>
+    <div id="skeleton-wrap">
+      <div class="skeleton-line" style="width:90%;"></div>
+      <div class="skeleton-line" style="width:75%;"></div>
+      <div class="skeleton-line" style="width:60%;"></div>
+    </div>
+    <div class="scroll-list" id="deploy-list" style="display:none;">
+      <div class="scroll-item">main — deployed 2 minutes ago</div>
+      <div class="scroll-item">feature/pricing-page — deployed 1 hour ago</div>
+      <div class="scroll-item">fix/scrollbar — deployed yesterday</div>
+      <div class="scroll-item">main — deployed 2 days ago</div>
+      <div class="scroll-item">chore/deps — deployed 3 days ago</div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- toggle -->
+  <section style="margin-bottom:48px;">
+    <h2>Settings</h2>
+    <div class="toggle-row">
+      <div class="toggle" id="email-toggle" onclick="toggleSwitch(this)">
+        <span class="toggle-thumb"></span>
+      </div>
+      <span>Email me when a deploy finishes</span>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <hr class="section-divider">
+  Built with patterns.fscss. MIT licensed.
+</footer>
+
+<script>
+function toggleSwitch(el) {
+  el.classList.toggle('is-on');
+}
+
+function deploy() {
+  var success = document.getElementById('project-name').value.trim() !== '';
+  var successAlert = document.getElementById('alert-success');
+  var errorAlert = document.getElementById('alert-error');
+  var fill = document.getElementById('progress-fill');
+  var label = document.getElementById('progress-label');
+
+  successAlert.style.display = 'none';
+  errorAlert.style.display = 'none';
+  fill.style.width = '0%';
+  label.textContent = 'Deploying...';
+
+  var pct = 0;
+  var timer = setInterval(function () {
+    pct += 20;
+    fill.style.width = pct + '%';
+    if (pct >= 100) {
+      clearInterval(timer);
+      label.textContent = success ? 'Deployed' : 'Build failed';
+      if (success) {
+        successAlert.style.display = 'flex';
+      } else {
+        errorAlert.style.display = 'flex';
+      }
+    }
+  }, 200);
+}
+
+// simulate a loading state resolving into real content
+setTimeout(function () {
+  document.getElementById('skeleton-wrap').style.display = 'none';
+  document.getElementById('deploy-list').style.display = 'block';
+}, 1200);
+
+// tabs
+document.querySelectorAll('.tab').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('is-active'); });
+    document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+    document.querySelector('.tab-panel[data-panel="' + btn.dataset.tab + '"]').classList.add('is-active');
+  });
+});
+</script>
+
+</body>
+</html>
