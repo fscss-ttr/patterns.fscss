@@ -1,10 +1,11 @@
-/* patterns.fscss — demo pattern library with @match inputs (FSCSS 1.2.4+)
+/* patterns.fscss — demo library (FSCSS 1.2.4+)
+   Custom values: --_x: @match(...);  property: var(--_x, var(--pattern-token));
+   Never: property: @match(...) var(--token);
    https://github.com/fscss-ttr/patterns.fscss
 */
 
 @define pattern-root(sel:root){`
 :@use(sel) {
-  /* Design tokens — defaults when @match finds nothing */
   --pattern-accent: #764ba2;
   --pattern-accent-light: #667eea;
   --pattern-accent-dark: #5a3d8a;
@@ -30,22 +31,27 @@
 
 /* ========== Cards ========== */
 
-pattern(@use(thr): "beautiful gradient hello world card bg from to color", `
+pattern(@use(thr): "beautiful gradient hello world card", `
+  --_from: @match(from:\s*([#\w(),.%-]+));
+  --_to: @match(to:\s*([#\w(),.%-]+));
+  --_color: @match((?:color|text):\s*([#\w()-]+));
   border-radius: var(--pattern-radius-lg);
   padding: var(--pattern-pad-lg);
   background: linear-gradient(
     135deg,
-    @match(from:?\s*([#\w(),.%\s-]+)) @match(bg:?\s*([#\w(),.%\s-]+)) var(--pattern-accent-light),
-    @match(to:?\s*([#\w(),.%\s-]+)) var(--pattern-accent)
+    var(--_from, var(--pattern-accent-light)),
+    var(--_to, var(--pattern-accent))
   );
-  color: @match(color:?\s*([#\w()-]+)) @match(text:?\s*([#\w()-]+)) var(--pattern-text);
+  color: var(--_color, var(--pattern-text));
   box-shadow: var(--pattern-shadow);
   transition: var(--pattern-transition);
 `)
 
-pattern(@use(thr): "soft elevated white card with subtle shadow radius", `
-  background: @match(bg:?\s*([#\w()-]+)) @match(background:?\s*([#\w()-]+)) var(--pattern-surface);
-  border-radius: @match(radius:?\s*([\d.]+(?:px|rem|em)?)) var(--pattern-radius-lg);
+pattern(@use(thr): "soft elevated white card with subtle shadow", `
+  --_bg: @match((?:bg|background):\s*([#\w()-]+));
+  --_radius: @match(radius:\s*([\d.]+(?:px|rem|em)?));
+  background: var(--_bg, var(--pattern-surface));
+  border-radius: var(--_radius, var(--pattern-radius-lg));
   padding: var(--pattern-pad-lg);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.04);
@@ -53,32 +59,38 @@ pattern(@use(thr): "soft elevated white card with subtle shadow radius", `
 
 /* ========== Buttons ========== */
 
-pattern(@use(thr): "white background button with purple label color bg", `
+pattern(@use(thr): "white background button with purple label", `
+  --_bg: @match((?:bg|background):\s*([#\w()-]+));
+  --_fg: @match((?:color|label|text):\s*([#\w()-]+));
   border: none;
   border-radius: var(--pattern-radius-md);
   padding: var(--pattern-pad-md);
-  background: @match(bg:?\s*([#\w()-]+)) @match(background:?\s*([#\w()-]+)) var(--pattern-surface);
-  color: @match(color:?\s*([#\w()-]+)) @match(label:?\s*([#\w()-]+)) var(--pattern-accent);
+  background: var(--_bg, var(--pattern-surface));
+  color: var(--_fg, var(--pattern-accent));
   font-weight: 600;
   cursor: pointer;
   transition: var(--pattern-transition);
 `)
 
-pattern(@use(thr): "solid purple primary button with white label bg color", `
+pattern(@use(thr): "solid purple primary button with white label", `
+  --_bg: @match((?:bg|background):\s*([#\w()-]+));
+  --_fg: @match((?:color|label|text):\s*([#\w()-]+));
   border: none;
   border-radius: var(--pattern-radius-md);
   padding: var(--pattern-pad-md);
-  background: @match(bg:?\s*([#\w()-]+)) @match(background:?\s*([#\w()-]+)) var(--pattern-accent);
-  color: @match(color:?\s*([#\w()-]+)) @match(label:?\s*([#\w()-]+)) var(--pattern-text-on-accent);
+  background: var(--_bg, var(--pattern-accent));
+  color: var(--_fg, var(--pattern-text-on-accent));
   font-weight: 600;
   cursor: pointer;
   transition: var(--pattern-transition);
 `)
 
-pattern(@use(thr): "ghost outline button with purple border color", `
+pattern(@use(thr): "ghost outline button with purple border", `
+  --_border: @match(border:\s*([#\w()-]+));
+  --_fg: @match((?:color|text):\s*([#\w()-]+));
   background: transparent;
-  border: 2px solid @match(border:?\s*([#\w()-]+)) @match(color:?\s*([#\w()-]+)) var(--pattern-accent);
-  color: @match(color:?\s*([#\w()-]+)) @match(text:?\s*([#\w()-]+)) var(--pattern-accent);
+  border: 2px solid var(--_border, var(--pattern-accent));
+  color: var(--_fg, var(--pattern-accent));
   border-radius: var(--pattern-radius-md);
   padding: var(--pattern-pad-md);
   font-weight: 600;
@@ -88,40 +100,46 @@ pattern(@use(thr): "ghost outline button with purple border color", `
 
 /* ========== Hover ========== */
 
-pattern(@use(thr): "lift up on hover with stronger shadow lift", `
+pattern(@use(thr): "lift up on hover with stronger shadow", `
+  --_lift: @match(lift:\s*(-?[\d.]+(?:px|rem)?));
   transition: var(--pattern-transition);
   &:hover {
-    transform: translateY(@match(lift:?\s*(-?[\d.]+(?:px|rem)?)) -4px);
+    transform: translateY(var(--_lift, -4px));
     box-shadow: var(--pattern-shadow-hover);
   }
 `)
 
-pattern(@use(thr): "scale slightly on hover scale", `
+pattern(@use(thr): "scale slightly on hover", `
+  --_scale: @match(scale:\s*([\d.]+));
   transition: transform 0.2s ease;
   &:hover {
-    transform: scale(@match(scale:?\s*([\d.]+)) 1.05);
+    transform: scale(var(--_scale, 1.05));
   }
 `)
 
-pattern(@use(thr): "glow purple on hover glow color", `
+pattern(@use(thr): "glow purple on hover", `
+  --_glow: @match((?:glow|color):\s*([#\w(),.%\s-]+));
   transition: box-shadow 0.3s ease;
   &:hover {
-    box-shadow: 0 0 20px @match(glow:?\s*([#\w(),.%\s-]+)) @match(color:?\s*([#\w(),.%\s-]+)) rgba(118, 75, 162, 0.5);
+    box-shadow: 0 0 20px var(--_glow, rgba(118, 75, 162, 0.5));
   }
 `)
 
 /* ========== Animations ========== */
 
-pattern(@use(thr): "smooth fade in animation from bottom duration", `
-  animation: fadeInUp @match(duration:?\s*([\d.]+s?)) @match(time:?\s*([\d.]+s?)) 0.6s ease forwards;
+pattern(@use(thr): "smooth fade in animation from bottom", `
+  --_dur: @match((?:duration|time):\s*([\d.]+s?));
+  animation: fadeInUp var(--_dur, 0.6s) ease forwards;
 `)
 
-pattern(@use(thr): "gentle pulse attention animation duration", `
-  animation: gentlePulse @match(duration:?\s*([\d.]+s?)) 2s ease-in-out infinite;
+pattern(@use(thr): "gentle pulse attention animation", `
+  --_dur: @match((?:duration|time):\s*([\d.]+s?));
+  animation: gentlePulse var(--_dur, 2s) ease-in-out infinite;
 `)
 
-pattern(@use(thr): "spin loading animation duration", `
-  animation: spin @match(duration:?\s*([\d.]+s?)) 1s linear infinite;
+pattern(@use(thr): "spin loading animation", `
+  --_dur: @match((?:duration|time):\s*([\d.]+s?));
+  animation: spin var(--_dur, 1s) linear infinite;
 `)
 
 pattern(@use(thr): "fade in up keyframes", `
@@ -147,46 +165,56 @@ pattern(@use(thr): "spin keyframes for loader", `
 
 /* ========== Components ========== */
 
-pattern(@use(thr): "modern input field with soft focus ring border", `
-  border: 1.5px solid @match(border:?\s*([#\w()-]+)) #e0dcec;
+pattern(@use(thr): "modern input field with soft focus ring", `
+  --_border: @match(border:\s*([#\w()-]+));
+  --_bg: @match((?:bg|background):\s*([#\w()-]+));
+  --_fg: @match(color:\s*([#\w()-]+));
+  border: 1.5px solid var(--_border, #e0dcec);
   border-radius: var(--pattern-radius-sm);
   padding: 12px 16px;
-  background: @match(bg:?\s*([#\w()-]+)) var(--pattern-surface);
-  color: @match(color:?\s*([#\w()-]+)) #333;
+  background: var(--_bg, var(--pattern-surface));
+  color: var(--_fg, #333);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 `)
 
-pattern(@use(thr): "badge or tag with rounded pill shape bg color", `
+pattern(@use(thr): "badge or tag with rounded pill shape", `
+  --_bg: @match((?:bg|background):\s*([#\w()-]+));
+  --_fg: @match((?:color|text):\s*([#\w()-]+));
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
   border-radius: 999px;
-  background: @match(bg:?\s*([#\w()-]+)) @match(background:?\s*([#\w()-]+)) var(--pattern-accent-light);
-  color: @match(color:?\s*([#\w()-]+)) @match(text:?\s*([#\w()-]+)) white;
+  background: var(--_bg, var(--pattern-accent-light));
+  color: var(--_fg, white);
   font-size: 0.8rem;
   font-weight: 600;
 `)
 
-pattern(@use(thr): "glass morphism frosted glass effect blur", `
+pattern(@use(thr): "glass morphism frosted glass effect", `
+  --_blur: @match(blur:\s*([\d.]+(?:px)?));
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(@match(blur:?\s*([\d.]+(?:px)?)) 12px);
-  -webkit-backdrop-filter: blur(@match(blur:?\s*([\d.]+(?:px)?)) 12px);
+  backdrop-filter: blur(var(--_blur, 12px));
+  -webkit-backdrop-filter: blur(var(--_blur, 12px));
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--pattern-radius-lg);
 `)
 
-pattern(@use(thr): "dark elegant tooltip or popover bg color", `
-  background: @match(bg:?\s*([#\w()-]+)) @match(background:?\s*([#\w()-]+)) #1a1a2e;
-  color: @match(color:?\s*([#\w()-]+)) @match(text:?\s*([#\w()-]+)) #eee;
+pattern(@use(thr): "dark elegant tooltip or popover", `
+  --_bg: @match((?:bg|background):\s*([#\w()-]+));
+  --_fg: @match((?:color|text):\s*([#\w()-]+));
+  background: var(--_bg, #1a1a2e);
+  color: var(--_fg, #eee);
   padding: 10px 14px;
   border-radius: var(--pattern-radius-sm);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   font-size: 0.875rem;
 `)
 
-pattern(@use(thr): "border initial width color", `
-  border: @match(width:?\s*([\d.]+(?:px)?)) var(--pattern-border-width) solid @match(color:?\s*([#\w()-]+)) currentColor;
+pattern(@use(thr): "border initial", `
+  --_width: @match(width:\s*([\d.]+(?:px)?));
+  --_color: @match(color:\s*([#\w()-]+));
+  border: var(--_width, var(--pattern-border-width)) solid var(--_color, currentColor);
 `)
 
 `}
