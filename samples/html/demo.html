@@ -14,7 +14,8 @@
     <a class="logo" href="#">PatternProv</a>
     <ul class="nav-links">
       <li><a href="#features">Features</a></li>
-
+      <li><a href="#try-it">Try it</a></li>
+      <li><a href="#status">Status</a></li>
     </ul>
     <a class="btn-primary" href="#try-it">Get started</a>
   </div>
@@ -76,14 +77,14 @@
 
   <hr class="section-divider">
 
-  <!-- status alerts, driven by the deploy button above -->
+  <!-- status -->
   <section id="status">
     <h2>Status</h2>
     <div class="alert-success" id="alert-success" style="display:none;">
       Deployed successfully. Your project is live.
     </div>
     <div class="alert-error" id="alert-error" style="display:none;">
-      build failed: missing environment variable <code>DATABASE_URL</code>.
+      Build failed: missing environment variable <code>DATABASE_URL</code>.
     </div>
 
     <div style="margin-top:16px;">
@@ -122,8 +123,9 @@
       <button class="tab" data-tab="changelog">Changelog</button>
     </div>
     <div class="tab-panel is-active" data-panel="overview">
-      Patterns compile to plain CSS custom properties with fallbacks, so the
-      output works even without JS on the page.
+      Patterns compile to plain CSS. Defaults live in the template; optional
+      values come from the phrase via @match. The cascade keeps a working
+      style even when a match is missing.
     </div>
     <div class="tab-panel" data-panel="reviews">
       "Cut our component CSS in half." — a dev.to comment, paraphrased.
@@ -205,13 +207,11 @@ function deploy() {
   }, 200);
 }
 
-// simulate a loading state resolving into real content
 setTimeout(function () {
   document.getElementById('skeleton-wrap').style.display = 'none';
   document.getElementById('deploy-list').style.display = 'block';
 }, 1200);
 
-// tabs
 document.querySelectorAll('.tab').forEach(function (btn) {
   btn.addEventListener('click', function () {
     document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('is-active'); });
