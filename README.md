@@ -1,136 +1,156 @@
 # patterns.fscss
 
-FSCSS pattern module — apply styling by describing it in plain English.
+FSCSS pattern module — style by plain English, **customize with prompt inputs** via `@match` (FSCSS **1.2.4+**).
 
-This is a demo module built on top of FSCSS's `pattern()` method. It does not
-attempt to cover every possible style. It exists to show how a pattern
-library works, and to serve as a starting point for your own.
+Demo library, not a full design system. Fork it, extend it, or use it as a template for your own pattern packs.
 
-MIT License.
+[GitHub](https://github.com/fscss-ttr/patterns.fscss) · [pattern() docs](https://fscss.devtem.org/pattern) · MIT
+
+---
 
 ## What this is
 
-FSCSS `pattern()` matches a phrase written in a stylesheet against a stored
-description, and injects the associated CSS when the similarity score meets
-a defined threshold. This module wraps a set of pattern descriptions and
-their CSS inside two reusable `@define` blocks:
+FSCSS `pattern()` scores a phrase in your stylesheet against each pattern description. When the score clears the threshold, the template CSS is injected.
 
-- `pattern-root(sel: root)` — declares the design tokens (colors, radii,
-  shadows, transitions) as CSS custom properties on a selector, `:root` by
-  default.
-- `patterns(thr: 0.65)` — declares the pattern library itself: cards,
-  buttons, hover effects, animations, and a few common UI components.
+This module ships two `@define` helpers:
+
+| Define | Role |
+|--------|------|
+| `pattern-root(sel:root)` | Design tokens (`--pattern-*`) on `:root` (or another selector) |
+| `patterns(thr:0.65)` | Pattern library — cards, buttons, hovers, motion, components |
+
+Templates use **`@match(regex)`** so callers can pass colors, radii, durations, etc. **in the phrase**. If a match is missing, a **token default** still applies.
+
+---
+
+## Requirements
+
+- **FSCSS ≥ 1.2.4** (balanced `@match`, safer regex)
+- CLI or runtime from the same major line
+
+```bash
+npm install fscss@1.2.4
+```
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/fscss@1.2.4/runtime.min.js" defer></script>
+```
+
+VS Code: [Figsh.fscss](https://marketplace.visualstudio.com/items?itemName=Figsh.fscss)
+
+---
 
 ## Usage
 
-### Import the published module
+### Published module
 
-```css
+```fscss
 @import((pattern-root, patterns) from patterns)
 
 @pattern-root()
 @patterns(0.7)
 
 .card {
-  beautiful gradient hello world card
+  beautiful gradient hello world card from: #667eea to: #764ba2 color: #fff
 }
 
 .btn-primary {
-  solid purple primary button with white label
+  solid purple primary button with white label bg: #5b21b6 color: #f8fafc
+}
+
+.btn-primary {
+  lift up on hover with stronger shadow lift: -6px
 }
 ```
 
-### Fork and import locally
-
-Fork this repo, drop `patterns.fscss` into your project, and import from the
-local path instead:
+### Local fork
 
 ```fscss
 @import((pattern-root, patterns) from "./patterns.fscss")
 ```
 
-Forking is the recommended path if you plan to add your own patterns rather
-than just consume the demo set — see Contributing below.
-
-### Compiling
+### Compile
 
 ```bash
-npm install -g fscss
 fscss style.fscss style.css
 ```
 
-Or via CDN in runtime mode:
+---
 
-```html
-<script src="https://cdn.jsdelivr.net/npm/fscss@1.1.26/e/exec.min.js" async></script>
-```
+## Prompt inputs (`@match`)
 
-### Pro tip
+Descriptions keep **stable keywords** for scoring. Optional slots in the **call phrase** are harvested with `@match`. Typical labels:
 
-Install the [FSCSS VS Code extension](https://marketplace.visualstudio.com/items?itemName=Figsh.fscss) for syntax highlighting, autocompilation
-on save, and pattern suggestions as you type.
+| Label in phrase | Used for |
+|-----------------|----------|
+| `bg:` / `background:` | Fill |
+| `color:` / `text:` / `label:` | Foreground |
+| `from:` / `to:` | Gradient stops |
+| `border:` | Border color |
+| `radius:` | Border radius |
+| `lift:` | Hover translateY |
+| `scale:` | Hover scale factor |
+| `glow:` | Hover glow color |
+| `duration:` / `time:` | Animation length |
+| `blur:` | Glass blur |
+| `width:` | Border width |
 
+Example — defaults if you omit slots:
 
-## How pattern() works
-
-```css
-pattern(threshold: "description", `
-  css
-`)
-```
-
-- `threshold` — minimum similarity score (0 to 1) a phrase must reach to
-  trigger the pattern. Defaults to 1 (near-exact match) if omitted.
-- `description` — the plain-English phrase being matched against.
-- `css` — the CSS injected when a phrase clears the threshold.
-
-A phrase in your stylesheet does not need to match a description word for
-word. It is scored against every pattern's description, and the
-highest-scoring pattern that also clears its own threshold wins.
-
-```css
-pattern(0.5: "Beautiful card", `
-  background: #667eea;
-`)
-
-.card {
-  beautiful card
+```fscss
+.btn {
+  solid purple primary button with white label
 }
 ```
 
+Example — override in prose:
+
+```fscss
+.btn {
+  solid purple primary button with white label bg: #0ea5e9 color: #0f172a
+}
+```
+
+`@match` runs on the **caller line**, not the stored description. First capturing group wins; aliases can be chained so `bg:` or `background:` both work.
+
+---
+
+## How `pattern()` works
+
+```fscss
+pattern(0.65: "solid purple primary button with white label bg color", `
+  background: @match(bg:?\s*([#\w()-]+)) var(--pattern-accent);
+  color: @match(color:?\s*([#\w()-]+)) var(--pattern-text-on-accent);
+`)
+```
+
+- **threshold** — minimum similarity (via `@patterns(0.7)` shared as `@use(thr)`).
+- **description** — plain English + optional cue words (`bg`, `color`) so inputs stay in vocabulary.
+- **template** — CSS with `@match` and token fallbacks.
+
+---
+
 ## What's included
 
-- **Cards** — gradient card, soft elevated card
-- **Buttons** — white button with purple label, solid purple primary
-  button, ghost outline button
-- **Hover effects** — lift on hover, scale on hover, glow on hover
-- **Animations** — fade in up, gentle pulse, spin, plus their matching
-  `@keyframes`
-- **Components** — input field with focus ring, pill badge, glass
-  morphism, dark tooltip
+- **Cards** — gradient (from/to/color), soft elevated (bg/radius)
+- **Buttons** — surface, solid primary, ghost (bg/color/border)
+- **Hover** — lift, scale, glow (lift/scale/glow)
+- **Motion** — fade-in-up, pulse, spin + keyframes (duration)
+- **Components** — input, pill badge, glass (blur), tooltip, border initial
 
-Full descriptions and their CSS are in [`patterns.fscss`](./patterns.fscss).
+---
 
 ## Contributing
 
-This module is intentionally small. It grows through contribution, not a
-fixed roadmap. If you want to add a pattern:
+1. Prefer **result-oriented** descriptions developers would type.
+2. Keep descriptions **lexically distinct** (unique nouns/verbs).
+3. Add `@match` only for values people actually vary; always leave a **token default**.
+4. Keep regexes simple (1.2.4 rejects hostile nested quantifiers).
+5. PR with a short note on the phrase + what CSS it produces.
 
-1. Write the CSS you want to reuse.
-2. Write a plain-English description for it, phrased the way a developer
-   would naturally describe the result, not the implementation.
-3. Keep the description lexically distinct from existing ones. Two
-   descriptions that share most of their words (for example, two button
-   variants both saying "primary button with white text") make matching
-   ambiguous. Give each pattern at least one or two words nothing else
-   uses.
-4. Add it to the appropriate section in `patterns.fscss`, following the
-   existing `pattern(@use(thr): "description", "css")` format.
-5. Open a pull request describing what the pattern produces.
+Project-specific patterns belong in your own module; this repo is for broadly reusable demos.
 
-Patterns that only make sense for one specific project are better kept in
-that project's own module. This repo is for patterns broadly useful across
-projects.
+---
 
 ## License
 
