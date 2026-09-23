@@ -328,7 +328,7 @@ a {
   border-bottom: 1px solid #f2f0f9;
 }
 
-/* ---------- footer ---------- */
+/* ---------- simple footer ---------- */
 
 .site-footer {
   padding-block: 32px;
@@ -336,4 +336,3 @@ a {
   color: #8b84a0;
   text-align: center;
 }
-
