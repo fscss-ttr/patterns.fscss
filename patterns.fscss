@@ -27,7 +27,7 @@
 }
 `}
 
-@define patterns(thr:0.65){`
+@define patterns(thr:0.65){'
 
 /* ========== Cards ========== */
 
@@ -217,4 +217,4 @@ pattern(@use(thr): "border initial", `
   border: var(--_width, var(--pattern-border-width)) solid var(--_color, currentColor);
 `)
 
-`}
+'}
