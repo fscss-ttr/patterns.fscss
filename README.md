@@ -79,41 +79,31 @@ fscss style.fscss style.css
 
 ## Prompt inputs (`@match`)
 
-Descriptions keep **stable keywords** for scoring. Optional slots in the **call phrase** are harvested with `@match`. Typical labels:
+Safe pattern used in this module:
 
-| Label in phrase | Used for |
-|-----------------|----------|
-| `bg:` / `background:` | Fill |
-| `color:` / `text:` / `label:` | Foreground |
-| `from:` / `to:` | Gradient stops |
-| `border:` | Border color |
-| `radius:` | Border radius |
-| `lift:` | Hover translateY |
-| `scale:` | Hover scale factor |
-| `glow:` | Hover glow color |
-| `duration:` / `time:` | Animation length |
-| `blur:` | Glass blur |
-| `width:` | Border width |
+```fscss
+--_bg: @match((?:bg|background):\s*([#\w()-]+));
+background: var(--_bg, var(--pattern-accent));
+```
 
-Example — defaults if you omit slots:
+| Phrase | Result |
+|--------|--------|
+| includes `bg: #0ea5e9` | `--_bg` set → used |
+| omits `bg:` | fallback → `var(--pattern-accent)` |
+
+**Never** write `background: @match(...) var(--token)` (two values when matched).
+
+Labels: `bg` / `background`, `color` / `text` / `label`, `from` / `to`, `border`, `radius`, `lift`, `scale`, `glow`, `duration` / `time`, `blur`, `width`.
 
 ```fscss
 .btn {
   solid purple primary button with white label
 }
-```
 
-Example — override in prose:
-
-```fscss
 .btn {
   solid purple primary button with white label bg: #0ea5e9 color: #0f172a
 }
 ```
-
-`@match` runs on the **caller line**, not the stored description. First capturing group wins; aliases can be chained so `bg:` or `background:` both work.
-
----
 
 ## How `pattern()` works
 
@@ -155,3 +145,4 @@ Project-specific patterns belong in your own module; this repo is for broadly re
 ## License
 
 MIT
+
