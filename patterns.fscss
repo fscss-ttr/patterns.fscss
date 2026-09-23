@@ -93,7 +93,7 @@ cursor: pointer;
 transition: var(--pattern-transition);
 ")
 
-/* ---------- hover / motion ---------- */
+/* ---------- hover / motion ----------- */
 
 pattern(@use(thr): "lift up on hover with stronger shadow", "
 transition: var(--pattern-transition);
