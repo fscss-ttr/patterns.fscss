@@ -27,7 +27,7 @@ Templates use **`@match(regex)`** so callers can pass colors, radii, durations, 
 
 Descriptions name a **role** ("solid primary button", "ghost outline button"), never a literal color word. The actual color lives in the design tokens, or comes in through `@match` when a caller supplies one.
 
-```fscss
+```css
 /* Good: role-based, generalizes, still matches loosely typed phrases */
 "solid filled primary button"
 "ghost outline button with accent border"
@@ -66,7 +66,7 @@ VS Code: [Figsh.fscss](https://marketplace.visualstudio.com/items?itemName=Figsh
 
 ### Published module
 
-```fscss
+```css
 @import((pattern-root, patterns) from patterns)
 
 @pattern-root()
@@ -87,7 +87,7 @@ VS Code: [Figsh.fscss](https://marketplace.visualstudio.com/items?itemName=Figsh
 
 ### Local fork
 
-```fscss
+```css
 @import((pattern-root, patterns) from "./patterns.fscss")
 ```
 
@@ -103,7 +103,7 @@ fscss style.fscss style.css
 
 Safe pattern used in this module:
 
-```fscss
+```css
 --_bg: @match((?:bg|background):\s*([#\w()-]+));
 background: var(--_bg, var(--pattern-accent));
 ```
@@ -117,7 +117,7 @@ background: var(--_bg, var(--pattern-accent));
 
 Labels in use across the module: `bg` / `background`, `color` / `text` / `label`, `from` / `to`, `border`, `radius`, `lift`, `scale`, `glow`, `duration` / `time`, `blur`, `width`, `size`, `ring`, `min` / `minwidth`, `max` / `maxwidth`, `pad` / `padding`, `gap`, `margin`, `thick` / `thickness`, `thumb`, `track`, `fill`, `lines`.
 
-```fscss
+```css
 .btn {
   solid filled primary button
 }
@@ -129,7 +129,7 @@ Labels in use across the module: `bg` / `background`, `color` / `text` / `label`
 
 ## How `pattern()` works
 
-```fscss
+```css
 pattern(0.65: "solid filled primary button bg color", `
   background: @match(bg:?\s*([#\w()-]+)) var(--pattern-accent);
   color: @match(color:?\s*([#\w()-]+)) var(--pattern-text-on-accent);
