@@ -1,5 +1,14 @@
 {
   "name": "patterns",
-  "version": "0.0.1",
-  "author": "fscss-ttr"
+  "version": "1.0.0",
+  "private": true,
+  "author": "FSCSS-TTR",
+  "description": "FSCSS pattern module — style by plain English",
+  "license": "MIT",
+  "scripts": {
+    "build": "fscss demo.fscss demo.css"
+  },
+  "devDependencies": {
+    "fscss": "1.2.4"
+  }
 }
